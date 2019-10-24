@@ -1,0 +1,9 @@
+Options +FollowSymlinks
+RewriteEngine on
+
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+
+RewriteRule ^api/country/([a-zA-Z0-9]*)$ routes/api/country.php?gid=$1 [L]
+RewriteRule ^api/department/([a-zA-Z0-9]*)$ routes/api/department.php?id=$1 [L]
+RewriteRule ^api/municipality/([a-zA-Z0-9]*)$ routes/api/municipality.php?id=$1 [L]

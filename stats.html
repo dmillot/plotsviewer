@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<header>
+  <meta charset="utf-8">
+  <script src="https://d3js.org/d3.v4.js"></script>
+  <style>
+    #my_dataviz{
+      margin-left: 50px;
+    }
+  </style>
+</header>
+
+<body>
+  <div id="my_dataviz"></div>
+</body>
+
+<script>
+
+  // set the dimensions and margins of the graph
+  var margin = {top: 100, right: 100, bottom: 30, left: 100},
+      width = 850 - margin.left - margin.right,
+      height = 500 - margin.top - margin.bottom;
+
+  // append the svg object to the body of the page
+  var svg = d3.select("#my_dataviz")
+    .append("svg")
+      .attr("width", width + margin.left + margin.right)
+      .attr("height", height + margin.top + margin.bottom)
+    .append("g")
+      .attr("transform",
+            "translate(" + margin.left + "," + margin.top + ")");
+
+  //Read the data
+  d3.csv("js/data.csv",
+
+    // When reading the csv, I must format variables:
+    function(d){
+      return { year : d.year, total : d.total }
+    },
+
+    // Now I can use this dataset:
+    function(data) {
+
+      // X axis: scale and draw:
+      var x = d3.scaleLinear()
+          .domain([2009, d3.max(data, function(d) { return +d.year })])
+          .range([0, width]);
+      svg.append("g")
+          .attr("transform", "translate(0," + height + ")")
+          .call(d3.axisBottom(x));
+
+      var div = d3.select("body").append("div")	
+      .attr("class", "tooltip")				
+      .style("opacity", 0);
+
+      // Add Y axis
+      var y = d3.scaleLinear()
+        .domain([0, d3.max(data, function(d) { return +d.total; })])
+        .range([ height, 0 ]);
+      svg.append("g")
+        .call(d3.axisLeft(y));
+
+      // Add the line
+      svg.append("path")
+        .datum(data)
+        .attr("fill", "none")
+        .attr("stroke", "steelblue")
+        .attr("stroke-width", 1.5)
+        .attr("d", d3.line()
+          .x(function(d) { return x(d.year) })
+          .y(function(d) { return y(d.total) })
+      )
+
+  });
+
+</script>
